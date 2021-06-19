@@ -1,25 +1,21 @@
-name: Create PR prod -> main
+name: Sync main with QA/UAT fixes
 on:
   push:
     branches:
-      - prod
+      - test
+      - test-patch
 jobs:
   sync-main:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Extract branch name
+        shell: bash
+        run: echo "::set-output name=branch::${GITHUB_REF#refs/heads/}"
+        id: extract_branch
       - name: Create Pull Request
-        id: cpr
-        uses: peter-evans/create-pull-request@v3
-        with:
-          commit-message: Sync main w/ prod - ${GITHUB_RUN_ID}
-          title: Sync test-patch w/ prod - ${GITHUB_RUN_ID}
-          base: prod
-          branch: main
-      - name: Enable Pull Request Automerge
-        if: steps.cpr.outputs.pull-request-operation == 'created'
-        uses: peter-evans/enable-pull-request-automerge@v1
-        with:
-          token: ${{ secrets.PAT }}
-          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
-          merge-method: rebase
+        run: echo "::set-output name=pr_url::$(gh pr create --title 'Sync main with QA/UAT fixes ${GITHUB_RUN_ID}' --body 'Sync fixes ${GITHUB_RUN_ID}' --base main --head ${{ steps.extract_branch.outputs.branch }}_"
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - name: Auto Pull Request
+        run: gh pr merge --auto --merge ${{ steps.extract_branch.outputs.pr_url }}}
