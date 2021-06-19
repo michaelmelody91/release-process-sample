@@ -21,4 +21,4 @@ jobs:
       - name: Print Pull Request
         run: echo '${{ steps.cpr.outputs.pr_url }}'
       - name: Auto Pull Request
-        run: gh pr merge --auto --rebase ${{ steps.cpr.outputs.pr_url }}
+        run: gh pr merge --auto --merge ${{ steps.cpr.outputs.pr_url }}
