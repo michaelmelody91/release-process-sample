@@ -14,7 +14,7 @@ jobs:
         with:
           commit-message: Sync test-patch w/ prod - ${GITHUB_RUN_ID}
           title: Sync test-patch w/ prod - ${GITHUB_RUN_ID}
-          head: prod
+          branch: prod
           base: test-patch
       - name: Enable Pull Request Automerge
         if: steps.cpr.outputs.pull-request-operation == 'created'
