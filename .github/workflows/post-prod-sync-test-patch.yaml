@@ -1,4 +1,4 @@
-name: Update AUTHORS
+name: Create PR prod -> test-patch
 on:
   push:
     branches:
