@@ -1,0 +1,25 @@
+name: Create PR prod -> main
+on:
+  push:
+    branches:
+      - prod
+jobs:
+  sync-main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v3
+        with:
+          commit-message: Sync main w/ prod - ${GITHUB_RUN_ID}
+          title: Sync test-patch w/ prod - ${GITHUB_RUN_ID}
+          base: main
+          branch: prod
+      - name: Enable Pull Request Automerge
+        if: steps.cpr.outputs.pull-request-operation == 'created'
+        uses: peter-evans/enable-pull-request-automerge@v1
+        with:
+          token: ${{ secrets.PAT }}
+          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+          merge-method: rebase
