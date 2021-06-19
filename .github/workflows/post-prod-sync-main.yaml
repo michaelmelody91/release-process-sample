@@ -18,4 +18,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: Auto Pull Request
-        run: gh pr merge --auto --merge ${{ steps.extract_branch.outputs.pr_url }}}
+        run: gh pr merge --auto --rebase ${{ steps.extract_branch.outputs.pr_url }}}
