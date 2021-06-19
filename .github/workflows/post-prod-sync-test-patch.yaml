@@ -4,7 +4,7 @@ on:
     branches:
       - prod
 jobs:
-  sync-main:
+  sync-test-patch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -14,8 +14,8 @@ jobs:
         with:
           commit-message: Sync test-patch w/ prod - ${GITHUB_RUN_ID}
           title: Sync test-patch w/ prod - ${GITHUB_RUN_ID}
-          branch: prod
-          base: test-patch
+          base: prod
+          branch: test-patch
       - name: Enable Pull Request Automerge
         if: steps.cpr.outputs.pull-request-operation == 'created'
         uses: peter-evans/enable-pull-request-automerge@v1
