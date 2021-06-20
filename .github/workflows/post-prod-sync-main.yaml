@@ -15,7 +15,7 @@ jobs:
           fetch-depth: 0
       - name: Is PR required?
         id: pr_required
-        run: echo "::set-output name=pr_required::$(git diff main --quiet)"
+        run: echo "::set-output name=pr_required::$(git diff origin/main --quiet)"
       - name: Extract branch name
         if: ${{ steps.pr_required.outputs.src == 1}}
         shell: bash
