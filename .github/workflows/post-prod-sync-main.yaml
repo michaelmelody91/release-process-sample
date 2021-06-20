@@ -11,14 +11,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Is PR required?
+        id: pr_required
+        run: echo "::set-output name=pr_required::$(git diff main --quiet)"
       - name: Extract branch name
+        if: ${{ steps.pr_required.outputs.src == 1}}
         shell: bash
         run: echo "::set-output name=branch::${GITHUB_REF#refs/heads/}"
         id: extract_branch
       - name: Create Pull Request
+        if: ${{ steps.pr_required.outputs.src == 1}}
         id: cpr
         run: echo "::set-output name=pr_url::$(gh pr create --title 'Sync main with QA/UAT fixes' --body 'Sync fixes' --base main --head ${{ steps.extract_branch.outputs.branch }} )"
-      - name: Print Pull Request
-        run: echo '${{ steps.cpr.outputs.pr_url }}'
       - name: Auto Pull Request
+        if: ${{ steps.pr_required.outputs.src == 1}}
         run: gh pr merge --auto --merge ${{ steps.cpr.outputs.pr_url }}
