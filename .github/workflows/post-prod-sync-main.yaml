@@ -19,7 +19,7 @@ jobs:
         id: pr_required
         run: echo "::set-output name=pr_required::$(git diff origin/main --quiet)"
       - name: Print outputs
-        run: echo ${{ steps.pr_required.outputs}}
+        run: echo ${{ steps.pr_required.outputs.pr_required}}
       - name: Extract branch name
         if: ${{ steps.pr_required.outputs.pr_required == 1}}
         shell: bash
