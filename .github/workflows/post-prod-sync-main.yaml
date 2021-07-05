@@ -21,6 +21,9 @@ jobs:
         shell: bash
         run: echo "::set-output name=branch::${GITHUB_REF#refs/heads/}"
         id: extract_branch
+      - name: Echo Event
+        shell: bash
+        run: echo ${{ github.event }}
       - name: Create Pull Request
         if: ${{ steps.pr_required.outputs.pr_required == 1}}
         id: cpr
