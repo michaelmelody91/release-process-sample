@@ -27,4 +27,4 @@ jobs:
       - name: Create Pull Request
         if: ${{ steps.pr_required.outputs.pr_required == 1}}
         id: cpr
-        run: gh pr create --title 'Sync main with QA/UAT fixes' --body 'Sync fixes' --base main --head ${{ steps.extract_branch.outputs.branch }}
+        run: gh pr create --fill --base main --head ${{ steps.extract_branch.outputs.branch }}
