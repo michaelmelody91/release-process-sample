@@ -1,0 +1,20 @@
+name: Sync main with QA/UAT fixes
+on:
+  pull_request:
+    types: [opened]
+    branches:
+      - main
+      - test
+      - test-patch
+env:
+  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+jobs:
+  close_pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close Pull Request
+        if: contains( github.event.pull_request.labels.*.name, 'sync-pr') && $${{github.event.pull_request.mergeable_state}} == 'dirty'
+        run: gh pr close $${{github.event.pull_request.number}}
+      - name: Close Pull Request
+        if: contains( github.event.pull_request.labels.*.name, 'sync-pr') && $${{github.event.pull_request.mergeable_state}} == 'dirty'
+        run: gh pr comment $${{github.event.pull_request.number}} -b '_Closing PR due to conflicts'
