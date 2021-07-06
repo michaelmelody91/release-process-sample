@@ -21,9 +21,9 @@ jobs:
         shell: bash
         run: echo "::set-output name=branch::${GITHUB_REF#refs/heads/}"
         id: extract_branch
-      - name: Echo Event pusher
+      - name: Ensure label is created
         shell: bash
-        run: echo ${{ github.event.pusher.name }}
+        run: gh api repos/:owner/:repo/labels -f name="sync-pr" -f color="000000"
       - name: Create Pull Request
         if: ${{ steps.pr_required.outputs.pr_required == 1}}
         id: cpr
