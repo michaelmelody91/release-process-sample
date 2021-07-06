@@ -5,10 +5,9 @@ env:
 jobs:
   close_pr:
     runs-on: ubuntu-latest
+    if: contains( github.event.pull_request.labels.*.name, 'sync-pr') && $${{github.event.pull_request.mergeable_state}} == 'dirty'
     steps:
       - name: Close Pull Request
-        if: contains( github.event.pull_request.labels.*.name, 'sync-pr') && $${{github.event.pull_request.mergeable_state}} == 'dirty'
         run: gh pr close $${{github.event.pull_request.number}}
       - name: Comment Pull Request
-        if: contains( github.event.pull_request.labels.*.name, 'sync-pr') && $${{github.event.pull_request.mergeable_state}} == 'dirty'
         run: gh pr comment $${{github.event.pull_request.number}} -b '_Closing PR due to conflicts'
