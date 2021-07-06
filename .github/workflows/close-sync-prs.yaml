@@ -1,11 +1,5 @@
 name: Close sync PRs
-on:
-  pull_request:
-    types: [opened]
-    branches:
-      - main
-      - test
-      - test-patch
+on: pull_request:
 env:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 jobs:
