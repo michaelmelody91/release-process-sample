@@ -1,11 +1,10 @@
 name: Sync main with QA/UAT fixes
-on:
-  pull_request:
-    types: [opened]
-    branches:
-      - main
-      - test
-      - test-patch
+on: pull_request
+    # types: [opened]
+    # branches:
+    #   - main
+    #   - test
+    #   - test-patch
 env:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 jobs:
