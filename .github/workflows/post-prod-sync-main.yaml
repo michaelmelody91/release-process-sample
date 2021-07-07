@@ -52,19 +52,19 @@ jobs:
         run: > 
           gh pr comment ${{ steps.cpr.outputs.pr_id }} -b '
             _Hey @${{github.event.pusher.name}} :wave:_
-            _This PR was created to sync changes from ${{ steps.extract_branch.outputs.branch }} to main. As we are unable to resolve conflicts directly on either ot these branches, please follow the below steps to resolve:_
+            _This PR was created to sync changes from ${{ steps.extract_branch.outputs.branch }} to main. As we are unable to resolve conflicts directly on either of these branches, please follow the below steps to resolve:_
 
             - *Step 1: From your project repository, bring in the changes and test.*
             ```
             git checkout main
             git pul;
-            git checkout -b conflicts/pr_${{ steps.cpr.outputs.pr_id }}
+            git checkout -b conflicts/${{ steps.cpr.outputs.pr_id }}
             git pull origin ${{ steps.extract_branch.outputs.branch }}
             ```
             - *Step 2: Merge the changes and update on GitHub.*
             ```
             git commit -m "Insert informative commit message her"
-            git push conflicts/pr_${{ steps.cpr.outputs.pr_id }}
+            git push conflicts/${{ steps.cpr.outputs.pr_id }}
             ```
 
             - *Step 3: Create a PR.*
