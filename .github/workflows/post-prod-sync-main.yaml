@@ -43,6 +43,8 @@ jobs:
         if: ${{ steps.pr_required.outputs.pr_required == 1}}
         id: mergeable
         run: echo "::set-output name=state::$(gh api repos/:owner/:repo/pulls/${{ steps.cpr.outputs.pr_id  }} --jq '.mergeable_state')"
+      - name: Echo Pull Request
+        run: echo ${{ steps.pr_required.outputs.pr_required }} ${{ steps.mergeable.outputs.state }}
       - name: Comment Pull Request
         if: ${{ steps.pr_required.outputs.pr_required == 1}} && ${{ steps.mergeable.outputs.state == 'dirty'}}
         run: > 
