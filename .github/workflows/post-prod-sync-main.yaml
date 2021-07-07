@@ -44,9 +44,9 @@ jobs:
         id: mergeable
         run: echo "::set-output name=state::$(gh api repos/:owner/:repo/pulls/${{ steps.cpr.outputs.pr_id  }} --jq '.mergeable_state')"
       - name: Echo Pull Request
-        run: echo $(${{ steps.pr_required.outputs.pr_required == 1}} && ${{ steps.mergeable.outputs.state == 'dirty'}})
+        run: echo ${{ steps.pr_required.outputs.pr_required == 1}} && ${{ steps.mergeable.outputs.state == 'dirty'}}
       - name: Comment Pull Request
-        if: $(${{ steps.pr_required.outputs.pr_required == 1}} && ${{ steps.mergeable.outputs.state == 'dirty'}})
+        if: ${{ steps.pr_required.outputs.pr_required == 1 && steps.mergeable.outputs.state == 'dirty'}})
         run: > 
           gh pr comment ${{ steps.cpr.outputs.pr_id }} -b '
             *Attention @${{github.event.pusher.name}}!* 
@@ -66,6 +66,6 @@ jobs:
             _Then create a PR from conflicts/pr_${{ steps.cpr.outputs.pr_id }} to main_
           '
       - name: Close Pull Request
-        if: $(${{ steps.pr_required.outputs.pr_required == 1}} && ${{ steps.mergeable.outputs.state == 'dirty'}})
+        if: $(${{ steps.pr_required.outputs.pr_required == 1 && steps.mergeable.outputs.state == 'dirty'}})
         run: gh pr close ${{ steps.cpr.outputs.pr_id }}
              
