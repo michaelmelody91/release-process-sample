@@ -13,22 +13,26 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
       - name: Is PR required?
         id: pr_required
         run: echo "::set-output name=pr_required::$(git diff origin/main --quiet || echo 1)"
+
       - name: Extract branch name
         if: ${{ steps.pr_required.outputs.pr_required == 1}}
         shell: bash
         run: echo "::set-output name=branch::${GITHUB_REF#refs/heads/}"
         id: extract_branch
+
       - name: Ensure label is created
         shell: bash
         run: gh api repos/:owner/:repo/labels -f name="sync-pr" -f color="000000" || true
+
       - name: Create Pull Request
         if: ${{ steps.pr_required.outputs.pr_required == 1}}
         id: cpr
         run: >
-          echo "::set-output name=pr_id::$(basename $(gh pr create --title 'Sync Fixes from ${{ steps.extract_branch.outputs.branch }} -  ${{ github.event.commits[0].message }}' --body '
+          echo "::set-output name=pr_id::$(basename $(gh pr create --title 'Sync changes from ${{ steps.extract_branch.outputs.branch }} -  ${{ github.event.commits[0].message }}' --body '
             _This PR was auto-created due to PR on the ${{ steps.extract_branch.outputs.branch }} branch. It has been created to ensure any changes applied due to UAT testing or production issues are reconciled into the main integration branch ASAP_ 
 
             _Please review the following checklist to ensure that this PR is accepted and merged in the correct manner_
@@ -37,31 +41,38 @@ jobs:
             - [ ] Approved by codeowners
             - [ ] _Merge pull request_ option to be used when merging this PR. **_Squash and merge_ should not be used!**
           ' --base main --head ${{ steps.extract_branch.outputs.branch }} --reviewer ${{github.event.pusher.name}} --label sync-pr))"
-      - name: Echo Pull Request
-        run: echo ${{ steps.cpr.outputs.pr_id }}
+          
       - name: Is PR conflicted?
         if: ${{ steps.pr_required.outputs.pr_required == 1}}
         id: mergeable
         run: echo "::set-output name=state::$(gh api repos/:owner/:repo/pulls/${{ steps.cpr.outputs.pr_id  }} --jq '.mergeable_state')"
+
       - name: Comment Pull Request
-        if: ${{ steps.pr_required.outputs.pr_required == 1 && steps.mergeable.outputs.state == 'dirty'}}
+        if: ${{ steps.pr_required.outputs.pr_required == 1}} && ${{ steps.mergeable.outputs.state == 'dirty'}}
         run: > 
           gh pr comment ${{ steps.cpr.outputs.pr_id }} -b '
-            *Attention @${{github.event.pusher.name}}!* 
-            _This PR has been caused due to conflicts. As we are unable to resolve conflicts directly on either main or ${{ steps.extract_branch.outputs.branch }}, please follow the below steps to resolve:_
+            _Hey @${{github.event.pusher.name}} :wave:_
+            _This PR was created to sync changes from ${{ steps.extract_branch.outputs.branch }} to main. As we are unable to resolve conflicts directly on either ot these branches, please follow the below steps to resolve:_
+
+            - *Step 1: From your project repository, bring in the changes and test.*
             ```
             git checkout main
-            git pull
+            git pul;
             git checkout -b conflicts/pr_${{ steps.cpr.outputs.pr_id }}
             git pull origin ${{ steps.extract_branch.outputs.branch }}
-            # Resolve conflicts manually
-            git commit -m
+            ```
+            - *Step 2: Merge the changes and update on GitHub.*
+            ```
+            git commit -m "Insert informative commit message her"
             git push conflicts/pr_${{ steps.cpr.outputs.pr_id }}
-            ````
+            ```
 
-            _Then create a PR from conflicts/pr_${{ steps.cpr.outputs.pr_id }} to main_
+            - *Step 3: Create a PR.*
+            ```
+            gh pr create --base main --head ${{ steps.extract_branch.outputs.branch }}
+            ```
           '
       # - name: Close Pull Request
-      #   if: ${{ steps.pr_required.outputs.pr_required == 1 && steps.mergeable.outputs.state == 'dirty'}}
+      #   if: ${{ steps.pr_required.outputs.pr_required == 1}} && ${{ steps.mergeable.outputs.state == 'dirty' }}
       #   run: gh pr close ${{ steps.cpr.outputs.pr_id }}
              
