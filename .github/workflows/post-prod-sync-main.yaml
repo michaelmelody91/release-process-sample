@@ -27,7 +27,16 @@ jobs:
       - name: Create Pull Request
         if: ${{ steps.pr_required.outputs.pr_required == 1}}
         id: cpr
-        run: echo "::set-output name=pr_id::$(basename $(gh pr create --title 'Sync Fixes from ${{ steps.extract_branch.outputs.branch }} -  ${{ github.event.commits[0].message }}' --body 'Sync fixes' --base main --head ${{ steps.extract_branch.outputs.branch }} --reviewer ${{github.event.pusher.name}} --label sync-pr))"
+        run: >
+          echo "::set-output name=pr_id::$(basename $(gh pr create --title 'Sync Fixes from ${{ steps.extract_branch.outputs.branch }} -  ${{ github.event.commits[0].message }}' --body '
+            _This PR was auto-created due to commit on the deploy/tests branch. It has been created to ensure any changes applied due to UAT testing or production issues are reconciled into the main integration branch ASAP_ 
+
+            _Please review the following checklist to ensure that this PR is accepted and merged in the correct manner_
+
+            - [ ] Changes approved by creator of the changes made on deploy/test
+            - [ ] Approved by codeowners
+            - [ ] _Merge pull request_ option to be used when merging this PR. **_Squash and merge_ should not be used!**
+          ' --base main --head ${{ steps.extract_branch.outputs.branch }} --reviewer ${{github.event.pusher.name}} --label sync-pr))"
       - name: Echo Pull Request
         run: echo ${{ steps.cpr.outputs.pr_id }}
       - name: Is PR conflicted?
