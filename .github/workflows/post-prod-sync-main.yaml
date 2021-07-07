@@ -29,7 +29,7 @@ jobs:
         id: cpr
         run: >
           echo "::set-output name=pr_id::$(basename $(gh pr create --title 'Sync Fixes from ${{ steps.extract_branch.outputs.branch }} -  ${{ github.event.commits[0].message }}' --body '
-            _This PR was auto-created due to commit on the deploy/tests branch. It has been created to ensure any changes applied due to UAT testing or production issues are reconciled into the main integration branch ASAP_ 
+            _This PR was auto-created due to PR on the ${{ steps.extract_branch.outputs.branch }} branch. It has been created to ensure any changes applied due to UAT testing or production issues are reconciled into the main integration branch ASAP_ 
 
             _Please review the following checklist to ensure that this PR is accepted and merged in the correct manner_
 
@@ -48,4 +48,23 @@ jobs:
         run: gh pr close ${{ steps.cpr.outputs.pr_id }}
       - name: Comment Pull Request
         if: ${{ steps.pr_required.outputs.pr_required == 1}} && ${{ steps.mergeable.outputs.state == 'dirty'}}
-        run: gh pr comment ${{ steps.cpr.outputs.pr_id }} -b '_Closing PR due to conflicts_'
+        run: > 
+          gh pr comment ${{ steps.cpr.outputs.pr_id }} -b '
+            *Attention ${{github.event.pusher.name}}!* 
+            _This PR has been caused due to conflicts. As we are unable to resolve conflicts directly on either main or ${{ steps.cpr.outputs.pr_id }}'
+
+            _Please follow the below steps to resolve:_
+            ```
+            git checkout main
+            git pull
+            git checkout -b conflicts/pr_${{ steps.cpr.outputs.pr_id }}
+            git pull origin ${{ steps.cpr.outputs.pr_id }}
+            # Resolve conflicts manually
+            git commit
+            git push
+            ````
+
+            _Then create a PR from conflicts/pr_${{ steps.cpr.outputs.pr_id }} to main_
+          '
+
+             
