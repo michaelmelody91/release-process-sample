@@ -63,4 +63,7 @@ jobs:
 
             _Then create a PR from conflicts/pr_${{ steps.cpr.outputs.pr_id }} to main_
           '
+      - name: Close Pull Request
+        if: ${{ steps.pr_required.outputs.pr_required == 1}} && ${{ steps.mergeable.outputs.state == 'dirty' }}
+        run: gh pr close ${{ steps.cpr.outputs.pr_id }}
              
