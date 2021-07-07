@@ -32,7 +32,7 @@ jobs:
         if: ${{ steps.pr_required.outputs.pr_required == 1}}
         id: cpr
         run: >
-          gh pr create --title 'Sync changes from ${{ steps.extract_branch.outputs.branch }} -  ${{ github.event.commits[0].message }}' --body '
+          echo $(gh pr create --title 'Sync changes from ${{ steps.extract_branch.outputs.branch }} -  ${{ github.event.commits[0].message }}' --body '
             _This PR was auto-created due to PR on the ${{ steps.extract_branch.outputs.branch }} branch. It has been created to ensure any changes applied due to UAT testing or production issues are reconciled into the main integration branch ASAP_ 
 
             _Please review the following checklist to ensure that this PR is accepted and merged in the correct manner_
@@ -40,7 +40,7 @@ jobs:
             - [ ] Changes approved by creator of the changes made on ${{ steps.extract_branch.outputs.branch }}
             - [ ] Approved by codeowners
             - [ ] _Merge pull request_ option to be used when merging this PR. **_Squash and merge_ should not be used!**
-          ' --base main --head ${{ steps.extract_branch.outputs.branch }} --reviewer ${{github.event.pusher.name}} --label sync-pr
+          ' --base main --head ${{ steps.extract_branch.outputs.branch }} --reviewer ${{github.event.pusher.name}} --label sync-pr)
    
       - name: Is PR conflicted?
         if: ${{ steps.pr_required.outputs.pr_required == 1}}
