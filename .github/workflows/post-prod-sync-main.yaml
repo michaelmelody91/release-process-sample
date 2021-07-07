@@ -58,10 +58,10 @@ jobs:
             git checkout main
             git pull
             git checkout -b conflicts/pr_${{ steps.cpr.outputs.pr_id }}
-            git pull origin ${{ steps.cpr.outputs.pr_id }}
+            git pull origin ${{ steps.extract_branch.outputs.branch }}
             # Resolve conflicts manually
-            git commit
-            git push
+            git commit -m "...."
+            git push conflicts/pr_${{ steps.cpr.outputs.pr_id }}
             ````
 
             _Then create a PR from conflicts/pr_${{ steps.cpr.outputs.pr_id }} to main_
