@@ -39,4 +39,4 @@ jobs:
         run: gh pr close ${{ steps.cpr.outputs.pr_id }}
       - name: Comment Pull Request
         if: ${{ steps.pr_required.outputs.pr_required == 1}} && ${{ steps.mergeable.outputs.state == 'dirty'}}
-        run: gh pr comment ${{ steps.cpr.outputs.pr_id }} -b '_Closing PR due to conflicts'
+        run: gh pr comment ${{ steps.cpr.outputs.pr_id }} -b '_Closing PR due to conflicts_'
