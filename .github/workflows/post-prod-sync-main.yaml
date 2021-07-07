@@ -51,7 +51,7 @@ jobs:
         run: > 
           gh pr comment ${{ steps.cpr.outputs.pr_id }} -b '
             *Attention @${{github.event.pusher.name}}!* 
-            _This PR has been caused due to conflicts. As we are unable to resolve conflicts directly on either main or ${{ steps.extract_branch.outputs.branch }}
+            _This PR has been caused due to conflicts. As we are unable to resolve conflicts directly on either main or ${{ steps.extract_branch.outputs.branch }}_
 
             _Please follow the below steps to resolve:_
             ```
