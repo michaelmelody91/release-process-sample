@@ -27,4 +27,14 @@ jobs:
       - name: Create Pull Request
         if: ${{ steps.pr_required.outputs.pr_required == 1}}
         id: cpr
-        run: gh pr create --title 'Sync Fixes from ${{ steps.extract_branch.outputs.branch }} -  ${{ github.event.commits[0].message }}' --body 'Sync fixes' --base main --head ${{ steps.extract_branch.outputs.branch }} --reviewer ${{github.event.pusher.name}} --label sync-pr
+        run: echo "::set-output name=pr_id::$(basename $(gh pr create --title 'Sync Fixes from ${{ steps.extract_branch.outputs.branch }} -  ${{ github.event.commits[0].message }}' --body 'Sync fixes' --base main --head ${{ steps.extract_branch.outputs.branch }} --reviewer ${{github.event.pusher.name}} --label sync-pr))
+      - name: Is PR conflicted?
+        if: ${{ steps.pr_required.outputs.pr_required == 1}}
+        id: mergeable
+        run: echo "::set-output name=state::$(gh api repos/:owner/:repo/pulls/${{ steps.cpr.outputs.pr_id  }} --jq '.mergeable_state')
+      - name: Close Pull Request
+        if: ${{ steps.pr_required.outputs.pr_required == 1}} && ${{ steps.mergeable.outputs.state == 'dirty' }}
+        run: gh pr close $${{github.event.pull_request.number}}
+      - name: Comment Pull Request
+        if: ${{ steps.pr_required.outputs.pr_required == 1}} && ${{ steps.mergeable.outputs.state == 'dirty'}}
+        run: gh pr comment $${{github.event.pull_request.number}} -b '_Closing PR due to conflicts'
