@@ -33,7 +33,7 @@ jobs:
         id: cpr
         run: >
           echo $(gh pr create --title 'Sync changes from ${{ steps.extract_branch.outputs.branch }} -  ${{ github.event.commits[0].message }}' --body '
-            _This PR was auto-created due to PR on the ${{ steps.extract_branch.outputs.branch }} branch. It has been created to ensure any changes applied due to UAT testing or production issues are reconciled into the main integration branch ASAP_ 
+            _This PR was auto-created due to a PR being merged on the ${{ steps.extract_branch.outputs.branch }} branch. It has been created to ensure any changes applied due to UAT testing or production issues are reconciled into the main integration branch ASAP_ 
 
             _Please review the following checklist to ensure that this PR is accepted and merged in the correct manner_
 
@@ -58,7 +58,7 @@ jobs:
           gh pr comment -b '
             _Hey @${{github.event.pusher.name}} :wave:_
             
-            _This PR was created to sync changes from ${{ steps.extract_branch.outputs.branch }} to main. As we are unable to resolve conflicts directly on either of these branches, please follow the below steps to resolve:_
+            _This PR was created to sync changes from ${{ steps.extract_branch.outputs.branch }} to main but unfortunately there are merge conflicts :cry: As we are unable to resolve conflicts directly on either of these branches, please follow the below steps to resolve:_
 
             - *Step 1: From your project repository, bring in the changes and test.*
             ```
@@ -81,4 +81,3 @@ jobs:
       # - name: Close Pull Request
       #   if: ${{ steps.pr_required.outputs.pr_required == 1}} && ${{ steps.mergeable.outputs.state == 'DIRTY' }}
       #   run: gh pr close
-             
