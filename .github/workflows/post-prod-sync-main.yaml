@@ -47,6 +47,11 @@ jobs:
         id: mergeable
         run: echo "::set-output name=state::$(gh pr view --json mergeStateStatus --jq '.mergeStateStatus')"
 
+      - name: Get PR number
+        if: ${{ steps.pr_required.outputs.pr_required == 1}}
+        id: pr_details
+        run: echo "::set-output name=number::$(gh pr view --json number --jq '.number')"        
+
       - name: Comment Pull Request
         if: ${{ steps.pr_required.outputs.pr_required == 1}} && ${{ steps.mergeable.outputs.state == 'DIRTY'}}
         run: > 
@@ -58,18 +63,18 @@ jobs:
             ```
             git checkout main
             git pul;
-            git checkout -b conflicts/resolve_$(gh pr view --json number --jq '.number')
+            git checkout -b conflicts/resolve_${{ steps.pr_details.outputs.number }}
             git pull origin ${{ steps.extract_branch.outputs.branch }}
             ```
             - *Step 2: Merge the changes and update on GitHub.*
             ```
             git commit -m "Insert informative commit message her"
-            git push conflicts/resolve_$(gh pr view --json number --jq '.number')
+            git push conflicts/resolve_${{ steps.pr_details.outputs.number }}
             ```
 
             - *Step 3: Create a PR.*
             ```
-            gh pr create --base main --head conflicts/resolve_$(gh pr view --json number --jq '.number')
+            gh pr create --base main --head conflicts/resolve_${{ steps.pr_details.outputs.number }}
             ```
           '
       # - name: Close Pull Request
