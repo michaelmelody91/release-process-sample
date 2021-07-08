@@ -53,7 +53,7 @@ jobs:
         run: echo "::set-output name=number::$(gh pr view --json number --jq '.number')"        
 
       - name: Comment Pull Request
-        if: ${{ steps.pr_required.outputs.pr_required == 1}} && ${{ steps.mergeable.outputs.state == 'DIRTY'}}
+        if: ${{ steps.pr_required.outputs.pr_required == 1 && steps.mergeable.outputs.state == 'DIRTY'}}
         run: > 
           gh pr comment -b '
             _Hey @${{github.event.pusher.name}} :wave:_
