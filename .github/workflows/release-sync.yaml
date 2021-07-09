@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-          ref: test
+          ref: deploy/test
 
       - name: Is PR required?
         id: pr_required
@@ -78,7 +78,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-          ref: test-patch
+          ref: deploy/test-patch
 
       - name: Is PR required?
         id: pr_required
@@ -105,7 +105,7 @@ jobs:
             - [ ] Changes approved by creator of the changes made on deploy/prod
             - [ ] Approved by codeowners
             - [ ] _Merge pull request_ option to be used when merging this PR. **_Squash and merge_ should not be used!**
-          ' --base deploy/test --head deploy/prod --reviewer ${{github.event.pusher.name}} --label sync-pr)
+          ' --base deploy/test-patch --head deploy/prod --reviewer ${{github.event.pusher.name}} --label sync-pr)
   
       - name: Is PR conflicted?
         if: ${{ steps.pr_required.outputs.pr_required == 1}}
@@ -135,7 +135,7 @@ jobs:
 
             - *Step 3: Create a PR.*
             ```
-            gh pr create --base deploy/test --head conflicts/resolve_${{ steps.pr_details.outputs.number }}
+            gh pr create --base deploy/test-patch --head conflicts/resolve_${{ steps.pr_details.outputs.number }}
             ```
           '
           
