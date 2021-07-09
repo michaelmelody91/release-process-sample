@@ -2,8 +2,8 @@ name: Sync main with QA/UAT fixes
 on:
   push:
     branches:
-      - test
-      - test-patch
+      - deploy/test
+      - deploy/test-patch
 env:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 jobs:
