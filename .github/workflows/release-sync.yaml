@@ -16,7 +16,7 @@ jobs:
 
       - name: Is PR required?
         id: pr_required
-        run: echo "::set-output name=pr_required::$(git diff origin/prod --quiet || echo 1)"
+        run: echo "::set-output name=pr_required::$(git diff origin/deploy/prod --quiet || echo 1)"
         
       - name: Get PR number
         if: ${{ steps.pr_required.outputs.pr_required == 1}}
@@ -82,7 +82,7 @@ jobs:
 
       - name: Is PR required?
         id: pr_required
-        run: echo "::set-output name=pr_required::$(git diff origin/prod --quiet || echo 1)"
+        run: echo "::set-output name=pr_required::$(git diff origin/deploy/prod --quiet || echo 1)"
 
       - name: Get PR number
         if: ${{ steps.pr_required.outputs.pr_required == 1}}
