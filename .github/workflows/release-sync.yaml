@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-          ref: test
+          ref: deploy/test
 
       - name: Is PR required?
         id: pr_required
@@ -78,7 +78,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-          ref: test-patch
+          ref: deploy/test-patch
 
       - name: Is PR required?
         id: pr_required
