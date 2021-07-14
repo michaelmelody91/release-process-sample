@@ -31,7 +31,7 @@ jobs:
         if: ${{ steps.pr_required.outputs.pr_required == 1 && steps.pr_details.outputs.number == 0 }}
         id: cpr
         run: >
-          echo $(gh pr create --title 'Sync changes: deploy/prod -> deploy/test --body '
+          echo $(gh pr create --title 'Sync changes: deploy/prod -> deploy/test' --body '
             _This PR was auto-created due to a PR being merged on the ${{ steps.extract_branch.outputs.branch }} branch. It has been created to ensure that the latest production fix from deploy/test-patch is available within UAT testing and subsequently the main integration branch._ 
 
             _Please review the following checklist to ensure that this PR is accepted and merged in the correct manner_
