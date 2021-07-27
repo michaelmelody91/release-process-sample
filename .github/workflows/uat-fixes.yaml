@@ -21,7 +21,7 @@ jobs:
       - name: Search for previously created PR
         if: ${{ steps.pr_required.outputs.pr_required == 1}}
         id: previously_created_pr
-        run: echo "::set-output name=number::$(gh pr view --json number --jq '.number')"      
+        run: echo "::set-output name=number::$(gh api repos/:owner/:repo/pulls -X "GET" -f base=deploy/test -f base=main --jq '.[0].number')"      
 
       - name: Ensure label is created
         shell: bash
