@@ -86,6 +86,6 @@ jobs:
             ```
             - *Step 4: Close this PR.*
             ```
-            gh pr close {{ steps.previously_created_pr.outputs.number || steps.created_pr.outputs.number }}
+            gh pr close ${{ steps.previously_created_pr.outputs.number || steps.created_pr.outputs.number }}
             ```
           '
