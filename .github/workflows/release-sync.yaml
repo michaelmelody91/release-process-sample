@@ -35,7 +35,8 @@ jobs:
           gh pr comment -b '
             _Adding @${{github.event.pusher.name}} as a reviewer._
             
-            _This PR was created to sync changes from deploy/prod to deploy/test. Please review, approve and merge (if possible!)._
+            _This PR was created to sync changes from deploy/prod to deploy/test. .
+              Please review, approve and merge (if possible!) so that changes you recently pushed to deploy/prod are available in deploy/test-patch._
           ' && gh pr edit --add-label sync-pr --add-reviewer ${{github.event.pusher.name}}
 
       # Create the PR only if it's required and one doesn't exist already
@@ -122,7 +123,8 @@ jobs:
           gh pr comment -b '
             _Adding @${{github.event.pusher.name}} as a reviewer._
             
-            _This PR was created to sync changes from deploy/prod to deploy/test-patch. Please review, approve and merge (if possible!)._
+            _This PR was created to sync changes from deploy/prod to deploy/test-patch.
+              Please review, approve and merge (if possible!) so that changes you recently pushed to deploy/prod are available in deploy/test-patch._
           ' && gh pr edit --add-label sync-pr --add-reviewer ${{github.event.pusher.name}}
 
       # Create the PR only if it's required and one doesn't exist already
