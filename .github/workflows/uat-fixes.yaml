@@ -32,7 +32,8 @@ jobs:
         if: ${{ steps.pr_required.outputs.pr_required == 1 && steps.previously_created_pr.outputs.number != 0}}
         run: > 
           gh pr comment -b '
-            _@${{github.event.pusher.name}} this PR was created to sync changes from deploy/test to main. Please review, approve and merge (if possible!)._
+            _@${{github.event.pusher.name}} this PR was previously created to sync changes from deploy/test to main. 
+            Please review, approve and merge (if possible!) so that changes you recently pushed to deploy/test are available in main._
           ' && gh pr edit --add-label sync-pr --add-reviewer ${{github.event.pusher.name}}
 
       # Create the PR only if it's required and one doesn't exist already
@@ -41,7 +42,7 @@ jobs:
         id: cpr
         run: >
           echo $(gh pr create --title 'Sync changes: deploy/test -> main' --body '
-            _This PR was auto-created due to a PR being merged on the deploy/test branch. It has been created to ensure any changes applied due to UAT testing or production issues are reconciled into the main integration branch ASAP_ 
+            _This PR was auto-created due to a PR being merged on to the deploy/test branch. It has been created to ensure any changes applied due to UAT testing or production issues are reconciled into the main integration branch ASAP_ 
 
             _Please review the following checklist to ensure that this PR is accepted and merged in the correct manner_
 
