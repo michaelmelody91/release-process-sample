@@ -32,9 +32,7 @@ jobs:
         if: ${{ steps.pr_required.outputs.pr_required == 1 && steps.previously_created_pr.outputs.number != 0}}
         run: > 
           gh pr comment -b '
-            _Adding @${{github.event.pusher.name}} as a reviewer._
-            
-            _This PR was created to sync changes from deploy/test to main. Please review, approve and merge (if possible!)._
+            _@${{github.event.pusher.name}} this PR was created to sync changes from deploy/test to main. Please review, approve and merge (if possible!)._
           ' && gh pr edit --add-label sync-pr --add-reviewer ${{github.event.pusher.name}}
 
       # Create the PR only if it's required and one doesn't exist already
